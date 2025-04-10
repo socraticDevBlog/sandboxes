@@ -64,3 +64,29 @@ Expect to find 2 new lines: init container has ran one time for each new pod
 
 QED: Init containers configured in a Deployment will run everytime a new pod replicas get created
 
+## a witness file, after a few scaling out and restarts
+
+```
+k exec -it nginx-deployment-5c8ffcdc88-fh9k9 -- cat /usr/share/nginx/html/witness_file.txt
+Defaulted container "nginx" out of: nginx, init-myservice (init)
+Wed Apr  9 23:54:25 UTC 2025
+Init container ran at: Wed Apr  9 23:54:25 UTC 2025
+Wed Apr  9 23:55:25 UTC 2025
+Init container ran at: Wed Apr  9 23:55:25 UTC 2025
+Wed Apr  9 23:55:26 UTC 2025
+Init container ran at: Wed Apr  9 23:55:26 UTC 2025
+Wed Apr  9 23:55:41 UTC 2025
+Init container ran at: Wed Apr  9 23:55:41 UTC 2025
+Wed Apr  9 23:55:42 UTC 2025
+Init container ran at: Wed Apr  9 23:55:42 UTC 2025
+Wed Apr  9 23:55:43 UTC 2025
+Init container ran at: Wed Apr  9 23:55:43 UTC 2025
+Wed Apr  9 23:55:43 UTC 2025
+Init container ran at: Wed Apr  9 23:55:43 UTC 2025
+Wed Apr  9 23:55:44 UTC 2025
+Init container ran at: Wed Apr  9 23:55:44 UTC 2025
+Wed Apr  9 23:55:45 UTC 2025
+Init container ran at: Wed Apr  9 23:55:45 UTC 2025
+Wed Apr  9 23:55:45 UTC 2025
+Init container ran at: Wed Apr  9 23:55:45 UTC 2025
+```
