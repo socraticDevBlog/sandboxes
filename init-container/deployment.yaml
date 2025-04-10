@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      initContainers:
+        - name: init-myservice
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "date >> /mnt/shared/witness_file.txt; echo \"Init container ran at: $(date)\" >> /mnt/shared/witness_file.txt",
+            ]
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /mnt/shared
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: shared-volume
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: shared-volume
+          persistentVolumeClaim:
+            claimName: shared-pvc
