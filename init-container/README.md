@@ -1,4 +1,4 @@
-# Nginx Init Container Project (no Istio)
+# Kubernetes Init Container Project (no Istio)
 
 This project contains a simple deployment configuration for an Nginx web
 server, which includes an init container for proof of concept purposes.
