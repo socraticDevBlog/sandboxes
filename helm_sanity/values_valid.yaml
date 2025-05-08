@@ -1,0 +1,4 @@
+podAnnotations:
+  foo: bar
+  test: one
+  test2: two
