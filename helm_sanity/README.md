@@ -1,22 +1,16 @@
 # helm_sanity - trust no LLM
 
-lately i've noticed LLM hallucinating Helm template configurations that just
-doesn't work since the template doesn't handle their suggested value tweaks
+Recently, I’ve noticed that LLMs often suggest Helm template configurations that don’t work because the templates don’t account for the proposed value changes.
 
-Helm usual behavior is just ignoring unhandled values
+By default, Helm ignores unhandled or non-existent properties unless explicitly disallowed in the schema (`values.schema.json`).
 
-Default Behavior: Helm ignores non-existing properties unless explicitly
-disallowed in the schema (`values.schema.json`).
+__Default Behavior:__ Helm will silently ignore properties that are not defined in the chart.
 
-To Enforce Validation: Add "additionalProperties": false to the schema. This
-may trigger false positive linting error since most Helm Chart allows and
-manages properties that are not declared in the values schema
+To Enforce Validation: Add `additionalProperties": false` to the schema. However, this may result in false-positive linting errors, as many Helm charts are designed to handle properties not explicitly declared in the schema.
 
-... and it becomes your problem to understand why your change haven't been
-applied!
+This can leave you wondering why your changes weren’t applied!
 
-let's use native Helm cli to validate that your configurations will end up in
-the applied manifests
+Let’s use the native Helm CLI to validate that your configurations are correctly reflected in the rendered manifests.
 
 ## add bitnami repo to your machine
 
