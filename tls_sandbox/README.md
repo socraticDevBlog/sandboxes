@@ -1,9 +1,5 @@
 # tls sandbox project
 
-totally vibe coding this one 🤖🎨
-
-## prompt
-
 "im looking for a sandbox project to understand how TLS works?"
 
 ## copilot
