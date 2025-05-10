@@ -22,7 +22,7 @@ def taxes_owed(amount, taxBrackets):
     taxes = []
 
     for bracket in taxBrackets:
-        taxable_income = max(0, min(amount, bracket.top) - bracket.bottom)
-        taxes.append(taxable_income * bracket.rate)
+        sliced_amount = max(0, min(amount, bracket.top) - bracket.bottom)
+        taxes.append(sliced_amount * bracket.rate)
 
     return sum(taxes)
