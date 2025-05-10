@@ -1,8 +1,11 @@
+from dataclasses import dataclass
+
+
+@dataclass
 class TaxBracket:
-    def __init__(self, bottom, top, rate):
-        self.bottom = bottom
-        self.top = top
-        self.rate = rate
+    bottom: float
+    top: float
+    rate: float
 
 
 def taxes_owed(amount, taxBrackets):
