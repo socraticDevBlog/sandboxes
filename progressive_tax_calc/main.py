@@ -22,10 +22,10 @@ def taxes_owed(amount, taxBrackets):
     - a decimal number: taxes owed for the amount inputed based on the various
     tax TaxBrackets
     """
-    taxes = []
 
-    for bracket in taxBrackets:
-        sliced_amount = max(0, min(amount, bracket.top) - bracket.bottom)
-        taxes.append(sliced_amount * bracket.rate)
+    calculate_tax = (
+        lambda bracket: max(0, min(amount, bracket.top) - bracket.bottom) * bracket.rate
+    )
+    taxes = map(calculate_tax, taxBrackets)
 
     return sum(taxes)
