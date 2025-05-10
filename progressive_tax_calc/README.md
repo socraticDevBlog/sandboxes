@@ -20,3 +20,9 @@ an array of struct `Bracket` carrying these fields:
   - bottom
   - top
   - (taxation) ratio
+
+## run unit tests
+
+```bash
+python -m unittest tests.py
+```
