@@ -21,15 +21,8 @@ def taxes_owed(amount, taxBrackets):
     """
     taxes = []
 
-    for x in taxBrackets:
-        if x.bottom <= amount and amount <= x.top:
-            slice = amount - x.bottom
-        elif amount < x.bottom:
-            slice = 0
-        elif amount < x.top:
-            slice = amount - x.bottom
-        else:
-            slice = x.top - x.bottom
-        taxes.append(slice * x.rate)
+    for bracket in taxBrackets:
+        taxable_income = max(0, min(amount, bracket.top) - bracket.bottom)
+        taxes.append(taxable_income * bracket.rate)
 
     return sum(taxes)
