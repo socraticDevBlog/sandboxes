@@ -37,6 +37,13 @@
 
 ## locally
 
+### requirements
+
+- [pipenv](https://pipenv.pypa.io/en/latest/) to install, manage, and run dependencies in a python virtual environment
+- latest NodeJS version (optionnal: use `nvm install`)
+
+### commands
+
 ```
 pipenv install
 
