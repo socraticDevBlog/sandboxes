@@ -4,16 +4,16 @@
 
 
 def sum(numbers, total=0) -> int:
-    if len(numbers) == 0:
-        return total
-
-    try:
+    if len(numbers) > 2:
         total += numbers.pop(0) + numbers.pop(1)
-    except:
+        return sum(numbers=numbers, total=total)
+        
+    try:
         total += numbers.pop(0)
-
-    return sum(numbers=numbers, total=total)
-
+    except:
+        ...
+        
+    return total
 
 numbers = [i for i in range(10)]
 
