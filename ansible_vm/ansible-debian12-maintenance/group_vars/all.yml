@@ -1,0 +1,19 @@
+# This file defines variables that are applicable to all hosts in the inventory.
+
+
+# List of packages to ensure are installed
+packages:
+  - git
+  - curl
+  - vim
+  - htop
+
+# Timezone to set on the system
+timezone: "UTC"
+
+# Desired hostname
+hostname: "debian12-vm"
+
+# Reboot settings
+reboot_timeout: 600
+pre_reboot_delay: 0

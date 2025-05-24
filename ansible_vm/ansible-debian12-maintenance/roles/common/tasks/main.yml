@@ -1,0 +1,32 @@
+- name: Update apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install common packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Allow OpenSSH through UFW
+  ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Set timezone
+  command: timedatectl set-timezone {{ timezone }}
+
+- name: Ensure the system is up to date
+  apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600

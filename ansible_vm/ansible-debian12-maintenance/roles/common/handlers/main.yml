@@ -1,0 +1,6 @@
+- name: Restart service
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items: []
+  when: ansible_service_mgr == 'systemd'

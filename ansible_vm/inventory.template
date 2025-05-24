@@ -1,0 +1,5 @@
+[debian12_vm]
+# your.server.address ansible_ssh_user=your_user
+
+[debian12_vm:vars]
+ansible_python_interpreter=/usr/bin/python3
