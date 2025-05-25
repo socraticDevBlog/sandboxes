@@ -1,6 +1,7 @@
 import unittest
 from factorial import factorial, NonPositiveIntegerError
 
+
 class TestFactorial(unittest.TestCase):
     def test_factorial_of_negative_integer_raises(self):
         with self.assertRaises(NonPositiveIntegerError) as context:
@@ -22,6 +23,7 @@ class TestFactorial(unittest.TestCase):
     def test_factorial_of_0(self):
         # Depending on implementation, may raise or return 1
         self.assertEqual(factorial(0), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
