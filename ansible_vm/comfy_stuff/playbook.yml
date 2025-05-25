@@ -1,0 +1,140 @@
+---
+- name: Set up leisure tools on Debian 12 VM
+  hosts: all
+  become: yes
+  vars_files:
+    - group_vars/all.yml
+  tasks:
+    - name: Install leisure packages
+      apt:
+        name: "{{ leisure_packages }}"
+        state: present
+
+    - name: Set zsh as default shell for user
+      user:
+        name: "{{ ansible_ssh_user | default(ansible_user) | default(ansible_user_id) }}"
+        shell: "{{ lookup('pipe', 'which zsh') | default('/usr/bin/zsh') }}"
+
+    - name: Install oh-my-zsh
+      become: false
+      shell: |
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true
+      args:
+        creates: ~/.oh-my-zsh
+
+    - name: Install powerlevel10k theme
+      become: false
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+        depth: 1
+
+    - name: Ensure powerlevel10k is set in .zshrc
+      become: false
+      lineinfile:
+        path: ~/.zshrc
+        regexp: '^ZSH_THEME='
+        line: 'ZSH_THEME="{{ zsh_theme }}"'
+
+    - name: Ensure ~/.vim/autoload directory exists
+      become: false
+      file:
+        path: ~/.vim/autoload
+        state: directory
+        mode: '0755'
+
+    - name: Install vim-plug for Vim plugin management
+      become: false
+      get_url:
+        url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        dest: ~/.vim/autoload/plug.vim
+        mode: '0644'
+
+    - name: Ensure ~/.vimrc exists
+      become: false
+      file:
+        path: ~/.vimrc
+        state: touch
+        mode: '0644'
+
+    - name: Remove old blockinfile markers from .vimrc
+      become: false
+      replace:
+        path: ~/.vimrc
+        regexp: '^(;;|,,) (BEGIN|END) ANSIBLE MANAGED BLOCK for vim-plug$'
+        replace: ''
+
+    - name: Ensure .vimrc has basic vim-plug config
+      become: false
+      blockinfile:
+        path: ~/.vimrc
+        marker: '" {mark} ANSIBLE MANAGED BLOCK for vim-plug'
+        block: |
+          call plug#begin('~/.vim/plugged')
+          {% for plugin in vim_plugins %}
+          Plug '{{ plugin }}'
+          {% endfor %}
+          call plug#end()
+          set number
+          let g:ale_linters_explicit = 1
+          let g:ale_fix_on_save = 1
+          let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace'], 'python': ['black', 'isort'], 'sh': ['shfmt']}
+          let g:ale_linters = {'python': ['flake8', 'mypy'], 'sh': ['shellcheck']}
+          let g:ale_sign_error = '✗'
+          let g:ale_sign_warning = '⚠'
+          let g:ale_virtualtext_cursor = 1
+
+    - name: Install Vim plugins with vim-plug
+      become: false
+      shell: |
+        vim -E -s +PlugInstall +qall || true
+      args:
+        creates: ~/.vim/plugged
+
+    - name: Install Python and shell linters/formatters for ALE
+      apt:
+        name: "{{ ['python3-pip'] + shell_linters }}"
+        state: present
+
+    - name: Install Python linters/formatters with pip (allow system install)
+      pip:
+        name: "{{ python_linters }}"
+        executable: pip3
+        extra_args: --break-system-packages
+
+    - name: Install pipenv (allow system install)
+      pip:
+        name:
+          - pipenv
+        executable: pip3
+        extra_args: --break-system-packages
+
+    - name: Install pyenv dependencies and clone pyenv
+      apt:
+        name: "{{ pyenv_dependencies }}"
+        state: present
+
+    - name: Clone pyenv repository
+      become: false
+      git:
+        repo: 'https://github.com/pyenv/pyenv.git'
+        dest: ~/.pyenv
+        update: yes
+
+    - name: Install NVM (Node Version Manager)
+      become: false
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        if [ ! -d "$NVM_DIR" ]; then
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+        fi
+      args:
+        creates: ~/.nvm
+
+    - name: Ensure default directories exist in user's home
+      become: false
+      file:
+        path: "~/{{ item }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ user_dirs }}"

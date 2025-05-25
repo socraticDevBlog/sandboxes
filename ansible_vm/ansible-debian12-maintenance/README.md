@@ -28,14 +28,14 @@ ansible-debian12-maintenance
 
 ### Inventory Setup
 
-Edit the `inventory` file to include the IP addresses or hostnames of your Debian 12 VM.
+Edit the `inventory` file at the project root to include the IP addresses or hostnames of your Debian 12 VM.
 
 ### Running the Playbook
 
-To execute the playbook, run the following command:
+To execute the playbook, run the following command from the project root:
 
-```
-ansible-playbook -i ../inventory playbook.yml
+```sh
+ansible-playbook -i ../inventory ansible-debian12-maintenance/playbook.yml
 ```
 
 ### Customizing Variables
@@ -49,6 +49,14 @@ The main tasks for the common role are defined in `roles/common/tasks/main.yml`.
 ### Handlers
 
 Handlers that can be triggered by tasks are defined in `roles/common/handlers/main.yml`. Use handlers for actions that should only occur when notified by a task, such as restarting services.
+
+### MOTD Customization
+
+Edit `motd.ascii` to change the login banner displayed to users.
+
+### Default Directories
+
+The playbook ensures the following directories exist in the user's home: `git`, `code`, `docs`, `temp`.
 
 ## Contributing
 
