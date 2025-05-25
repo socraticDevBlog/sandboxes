@@ -24,7 +24,7 @@ the function calls itself; usually with a slightly modified input parameter
 Here are some simple and classic problems that can be solved by recursion and
 are perfect for introducing bright teenagers to this concept:
 
-Calculating the Factorial
+Calculating the Factorial ✅ 
 Explain how to calculate n! = n × (n-1) × ... × 1 recursively.
 
 Fibonacci Sequence
@@ -46,7 +46,7 @@ Demonstrate how to traverse a tree (e.g., prefix, infix, postfix) recursively.
 Solving the Towers of Hanoi Problem
 A classic example of the power of recursion and the decomposition of a complex problem.
 
-Calculating the sum of the digits of a number
+Calculating the sum of the digits of a number ✅ 
 For example, the sum of the digits of 1234 = 1 + 2 + 3 + 4.
 
 ### sum of numbers in a list
