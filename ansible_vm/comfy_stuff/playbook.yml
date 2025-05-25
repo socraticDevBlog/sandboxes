@@ -64,6 +64,27 @@
         regexp: '^(;;|,,) (BEGIN|END) ANSIBLE MANAGED BLOCK for vim-plug$'
         replace: ''
 
+    - name: Remove all previous plug#begin/plug#end blocks from .vimrc
+      become: false
+      replace:
+        path: ~/.vimrc
+        regexp: 'call plug#begin\([^)]*\)[\s\S]*?call plug#end\(\)'
+        replace: ''
+
+    - name: Ensure ~/.vim/pack/plugins/start directory exists
+      become: false
+      file:
+        path: ~/.vim/pack/plugins/start
+        state: directory
+        mode: '0755'
+
+    - name: Install ALE using Vim native package system
+      become: false
+      git:
+        repo: https://github.com/dense-analysis/ale.git
+        dest: ~/.vim/pack/plugins/start/ale
+        update: yes
+
     - name: Ensure .vimrc has basic vim-plug config
       become: false
       blockinfile:
@@ -71,10 +92,18 @@
         marker: '" {mark} ANSIBLE MANAGED BLOCK for vim-plug'
         block: |
           call plug#begin('~/.vim/plugged')
-          {% for plugin in vim_plugins %}
+          {% for plugin in vim_plugins if plugin != 'dense-analysis/ale' %}
           Plug '{{ plugin }}'
           {% endfor %}
           call plug#end()
+          set rtp+=~/.vim/autoload
+
+    - name: Ensure .vimrc has ALE and general Vim config
+      become: false
+      blockinfile:
+        path: ~/.vimrc
+        marker: '" {mark} ANSIBLE MANAGED BLOCK for vim/ale config'
+        block: |
           set number
           let g:ale_linters_explicit = 1
           let g:ale_fix_on_save = 1
@@ -84,12 +113,13 @@
           let g:ale_sign_warning = '⚠'
           let g:ale_virtualtext_cursor = 1
 
-    - name: Install Vim plugins with vim-plug
+    - name: Force Vim plugin installation with PlugInstall
       become: false
       shell: |
-        vim -E -s +PlugInstall +qall || true
+        vim -E -s +PlugInstall +qall
       args:
-        creates: ~/.vim/plugged
+        creates: ~/.vim/plugged/ale
+      ignore_errors: true
 
     - name: Install Python and shell linters/formatters for ALE
       apt:
@@ -138,3 +168,10 @@
         state: directory
         mode: '0755'
       loop: "{{ user_dirs }}"
+
+    - name: Remove all empty parentheses lines from .vimrc
+      become: false
+      replace:
+        path: ~/.vimrc
+        regexp: '^\(\)\s*$'
+        replace: ''
