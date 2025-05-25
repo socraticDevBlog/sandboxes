@@ -35,8 +35,10 @@ Edit the `inventory` file at the project root to include the IP addresses or hos
 To execute the playbook, run the following command from the project root:
 
 ```sh
-ansible-playbook -i ../inventory ansible-debian12-maintenance/playbook.yml
+ansible-playbook ansible-debian12-maintenance/playbook.yml
 ```
+
+> **Note:** Make sure to run this command from the project root (where `ansible.cfg` and `inventory` are located).
 
 ### Customizing Variables
 

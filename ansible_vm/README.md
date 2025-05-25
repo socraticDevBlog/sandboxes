@@ -19,7 +19,7 @@ This playbook is designed for general system maintenance and hardening. It:
 
 **Usage:**
 ```sh
-ansible-playbook -i ../inventory ansible-debian12-maintenance/playbook.yml
+ansible-playbook ansible-debian12-maintenance/playbook.yml
 ```
 
 ## 2. Developer/Leisure Environment Playbook
@@ -35,7 +35,7 @@ This playbook sets up a comfortable coding and leisure environment. It:
 
 **Usage:**
 ```sh
-ansible-playbook -i ../inventory comfy_stuff/playbook.yml
+ansible-playbook comfy_stuff/playbook.yml
 ```
 
 ## Inventory Management
