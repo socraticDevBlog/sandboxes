@@ -1,19 +1,29 @@
----
 - name: Set up leisure tools on Debian 12 VM
   hosts: all
   become: yes
   vars_files:
     - group_vars/all.yml
   tasks:
-    - name: Install leisure packages
+    - name: Install tfswitch (Terraform version switcher)
+      become: yes
+      shell: |
+        set -e
+        if ! command -v tfswitch >/dev/null 2>&1; then
+          curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
+        fi
+      args:
+        creates: /usr/local/bin/tfswitch
+      tags: tfswitch
+
+    - name: Ensure zsh is installed
       apt:
-        name: "{{ leisure_packages }}"
+        name: zsh
         state: present
 
     - name: Set zsh as default shell for user
       user:
         name: "{{ ansible_ssh_user | default(ansible_user) | default(ansible_user_id) }}"
-        shell: "{{ lookup('pipe', 'which zsh') | default('/usr/bin/zsh') }}"
+        shell: /usr/bin/zsh
 
     - name: Install oh-my-zsh
       become: false
