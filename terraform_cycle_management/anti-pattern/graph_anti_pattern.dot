@@ -1,0 +1,9 @@
+digraph G {
+  rankdir = "RL";
+  node [shape = rect, fontname = "sans-serif"];
+  subgraph "cluster_module.random" {
+    label = "module.random"
+    fontname = "sans-serif"
+    "module.random.random_string.this" [label="random_string.this"];
+  }
+}
