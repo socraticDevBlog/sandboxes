@@ -4,10 +4,6 @@ module "random" {
   prefix   = each.value.first_name
 }
 
-output "unique_id" {
-  value = { for k, mod in module.random : k => mod.random_output }
-}
-
 module "end_of_life" {
   for_each = var.students
   source   = "./module_life_expectancy"
@@ -16,6 +12,13 @@ module "end_of_life" {
   depends_on = [module.random]
 }
 
-output "ends_of_life" {
-  value = { for k, mod in module.end_of_life : k => mod.life_end_date }
+output "students_summary" {
+  value = {
+    for k, s in var.students :
+    k => {
+      unique_id     = "${module.random[k].random_output}"
+      date_of_birth = s.dob
+      date_of_death = module.end_of_life[k].life_end_date
+    }
+  }
 }
