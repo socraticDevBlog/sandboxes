@@ -57,7 +57,7 @@ This playbook provisions a PostgreSQL database on your Debian 12 VPS.
 3. Run the playbook:
 
    ```sh
-   ansible-playbook playbook.yml
+   ansible-playbook postgresql_provision/playbook.yml --ask-vault-password
    ```
 
 If you see a warning about "No inventory was parsed", make sure you run this command from the root of your project (where the `ansible.cfg` and `inventory` files are located), or specify the inventory path with `-i ../inventory` if running from another directory.

@@ -67,3 +67,9 @@ to view the secret
 ```bash
 ansible-vault view vault.yml
 ```
+
+### required for postgresql_provision
+
+```bash
+ansible-playbook postgresql_provision/playbook.yml --ask-vault-password
+```
