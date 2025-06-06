@@ -52,3 +52,18 @@ ansible-playbook comfy_stuff/playbook.yml
 - `comfy_stuff/` — Developer/leisure environment playbook
 - `inventory` — Your private inventory file (not committed)
 - `inventory.template` — Example inventory file for sharing
+
+## ansible-vault
+
+create a password-protected vault (if none exist)
+```bash
+ansible-vault create vault.yml
+```
+
+save your vault password in KeepasXC new entry: "ansible vault"
+
+to view the secret
+
+```bash
+ansible-vault view vault.yml
+```
