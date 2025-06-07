@@ -3,8 +3,13 @@ date: 2025-06-07
 human: socraticDev
 ai: `GPT-4.1`
 sources:
-- [Civilian Complaint Review Board: Allegations Against Police Officers](https://catalog.data.gov/dataset/civilian-complaint-review-board-allegations-against-police-officers)
-- [Civilian Complaint Review Board: Penalties](https://data.cityofnewyork.us/Public-Safety/Civilian-Complaint-Review-Board-Penalties/keep-pkmh/about_data)
+---
+date: 2025-06-07
+human: socraticDev
+ai: GPT-4.1
+sources:
+  - "https://catalog.data.gov/dataset/civilian-complaint-review-board-allegations-against-police-officers"
+  - "https://data.cityofnewyork.us/Public-Safety/Civilian-Complaint-Review-Board-Penalties/keep-pkmh/about_data"
 ---
 
 # Top 10 Most Significant Offenses and Penalties (NYC Police Brutality Complaints)
