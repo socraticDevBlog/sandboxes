@@ -1,11 +1,6 @@
 ---
 date: 2025-06-07
 human: socraticDev
-ai: `GPT-4.1`
-sources:
----
-date: 2025-06-07
-human: socraticDev
 ai: GPT-4.1
 sources:
   - "https://catalog.data.gov/dataset/civilian-complaint-review-board-allegations-against-police-officers"
