@@ -24,16 +24,31 @@
         - sensible to outliers
         - parametric algorithm
 - classification ✔️
+  - logistic regression
+  - naive Bayes
+  - support vector machines
+  - K nearest neighbors
+  - decision trees and random forests
+  - neural networks
+  - convolutional neural networks
 - dimensionality reduction ✔️
-- clustering ✔️
-- time-series forecasting
-- natural language processing
-- anomaly detection
-- ranking
-- recommendation
-- data generation
-- optimization
+  - linear discriminant analysis (lda)
+  - principal component analysis (pca)
+  - T distributed stochastic neighbor embedding
+- clustering ✔️ (essential to non-supervized learning)
+  - clustering algorithms
+  - K means
+  - Gaussian mixtures
+  - hierchical clustering
+  - affinity propagation
+- transfer learning
+- sound classification
 - object detection
+- time series analysis
+- natural language processing (nlp)
+- video classification
+- generative AI
+- reinforcement learning
 
 ## locally
 
