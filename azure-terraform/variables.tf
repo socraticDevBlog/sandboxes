@@ -1,29 +1,34 @@
 variable "subscription_id" {
-  type = string
+  description = "Azure Subscription (Account ID)"
+  type        = string
 }
 
 variable "resource_group_name" {
-  type = string
+  description = "Subscription's resource group to group all created resources"
+  type        = string
 }
 
 variable "region" {
-  type = string
+  description = "Where in the world are my resources provisionned"
+  type        = string
 }
 
 variable "name" {
-  type = string
+  description = "blob storage account name"
+  type        = string
 }
 
 variable "tags" {
-  type = map(any)
+  description = "metadata to explain what the resources are"
+  type        = map(any)
   default = {
-
   }
 }
 
 variable "whitelisted_ips" {
-  type    = set(string)
-  default = []
+  description = "resources can only be accessed by machines located at these IP addresses"
+  type        = set(string)
+  default     = []
 }
 
 variable "backup_containers" {
@@ -50,5 +55,6 @@ variable "vm_size" {
 }
 
 variable "vm_os_disk_name" {
-  type = string
+  description = "unique name for the VM operating system disk"
+  type        = string
 }
