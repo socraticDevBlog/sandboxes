@@ -14,6 +14,7 @@ resource "azurerm_storage_account" "backups" {
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"
   account_replication_type = "ZRS"
+  access_tier              = "Cool"
 
   blob_properties {
     versioning_enabled = false
