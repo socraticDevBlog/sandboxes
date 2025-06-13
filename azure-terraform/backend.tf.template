@@ -1,0 +1,8 @@
+terraform {
+  backend "azurerm" {
+    resource_group_name  = ""                        # Replace with your resource group name
+    storage_account_name = ""                        # Replace with your storage account name
+    container_name       = "sandbox-azure-terraform" # Replace with your container name
+    key                  = "terraform.tfstate"       # Name of the state file
+  }
+}
