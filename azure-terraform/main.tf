@@ -28,3 +28,11 @@ resource "azurerm_storage_account_network_rules" "whitelist" {
   default_action = "Deny"
   ip_rules       = var.whitelisted_ips
 }
+
+resource "azurerm_storage_container" "backups" {
+  for_each = var.backup_containers
+
+  name                  = each.value
+  storage_account_id    = azurerm_storage_account.backups.id
+  container_access_type = "private"
+}

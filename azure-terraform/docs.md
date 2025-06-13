@@ -24,12 +24,14 @@ No modules.
 | [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/resource_group) | resource |
 | [azurerm_storage_account.backups](https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/storage_account) | resource |
 | [azurerm_storage_account_network_rules.whitelist](https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/storage_account_network_rules) | resource |
+| [azurerm_storage_container.backups](https://registry.terraform.io/providers/hashicorp/azurerm/4.33.0/docs/resources/storage_container) | resource |
 | [random_pet.this](https://registry.terraform.io/providers/hashicorp/random/3.7.2/docs/resources/pet) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_backup_containers"></a> [backup\_containers](#input\_backup\_containers) | names of containers dedicated to backup storage accounts | `set(string)` | `[]` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | n/a | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | n/a | `string` | n/a | yes |
