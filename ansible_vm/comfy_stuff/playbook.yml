@@ -5,6 +5,8 @@
   vars_files:
     - group_vars/all.yml
   tasks:
+    - import_tasks: tasks/go.yml
+      tags: go
     - name: Ensure shell for anon is bash (for Ansible compatibility)
       user:
         name: anon

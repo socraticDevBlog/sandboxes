@@ -1,0 +1,40 @@
+---
+- name: Get latest Go version number
+  become: false
+  shell: |
+    curl -s https://go.dev/VERSION?m=text | head -n1
+  register: go_version_result
+  changed_when: false
+  tags: go
+
+- name: Download latest Go tarball
+  become: false
+  get_url:
+    url: "https://go.dev/dl/{{ go_version_result.stdout }}.linux-amd64.tar.gz"
+    dest: "/tmp/{{ go_version_result.stdout }}.linux-amd64.tar.gz"
+    mode: '0644'
+  tags: go
+
+- name: Remove any previous Go installation
+  become: true
+  file:
+    path: /usr/local/go
+    state: absent
+  tags: go
+
+- name: Extract Go to /usr/local
+  become: true
+  unarchive:
+    src: "/tmp/{{ go_version_result.stdout }}.linux-amd64.tar.gz"
+    dest: /usr/local
+    remote_src: yes
+  tags: go
+
+- name: Ensure /usr/local/go/bin is in PATH for zsh
+  become: false
+  lineinfile:
+    path: ~/.zshrc
+    regexp: '^export PATH="\$PATH:/usr/local/go/bin"'
+    line: 'export PATH="$PATH:/usr/local/go/bin"'
+    insertafter: EOF
+  tags: go
