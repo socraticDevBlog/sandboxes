@@ -19,7 +19,7 @@ azure-terraform/
 ├── backend.tf           # Actual backend config (not commited)
 ├── docs.md              # Generated documentation (terraform-docs)
 ├── main.tf              # Main Terraform configuration
-├── private.tfvars       # Private variable values (not committed)
+├── private.tfvars.gpg   # encrypted Private variable values 
 ├── providers.tf         # Provider and version pinning
 ├── variables.tf         # Variable definitions
 └── README.md            # This documentation
