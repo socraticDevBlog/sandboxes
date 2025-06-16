@@ -87,10 +87,13 @@ terraform {
 ## Variables and Sensitive Data
 
 - All variables are defined in `variables.tf`.
-- Sensitive values (like resource names, whitelisted IPs) are set in `private.tfvars` (not committed).
+- Sensitive values (like resource names, whitelisted IPs) are set in
+  `private.tfvars.gpg` and decrypted at command-time using [GNU Privacy
+  Guard](https://www.gnupg.org/) cli tool
+
 - Example usage:
   ```sh
-  terraform plan -var-file="private.tfvars"
+  terraform plan -var-file=<(gpg -d private.tfvars.gpg)
   ```
 
 ---
@@ -139,7 +142,7 @@ This will generate a markdown table of inputs, outputs, and resources in `docs.m
    ```
 5. **Generate documentation:**
    ```sh
-   terraform-docs markdown table . > docs.md
+   terraform-docs markdown table . |> docs.md
    ```
 
 ---
