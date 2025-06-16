@@ -142,7 +142,7 @@ This will generate a markdown table of inputs, outputs, and resources in `docs.m
    ```
 5. **Generate documentation:**
    ```sh
-   terraform-docs markdown table . |> docs.md
+   terraform-docs markdown table . > docs.md
    ```
 
 ---
