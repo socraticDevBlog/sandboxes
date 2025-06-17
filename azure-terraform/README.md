@@ -19,7 +19,7 @@ azure-terraform/
 ├── backend.tf           # Actual backend config (not commited)
 ├── docs.md              # Generated documentation (terraform-docs)
 ├── main.tf              # Main Terraform configuration
-├── private.tfvars       # Private variable values (not committed)
+├── private.tfvars.gpg   # encrypted Private variable values 
 ├── providers.tf         # Provider and version pinning
 ├── variables.tf         # Variable definitions
 └── README.md            # This documentation
@@ -87,10 +87,13 @@ terraform {
 ## Variables and Sensitive Data
 
 - All variables are defined in `variables.tf`.
-- Sensitive values (like resource names, whitelisted IPs) are set in `private.tfvars` (not committed).
+- Sensitive values (like resource names, whitelisted IPs) are set in
+  `private.tfvars.gpg` and decrypted at command-time using [GNU Privacy
+  Guard](https://www.gnupg.org/) cli tool
+
 - Example usage:
   ```sh
-  terraform plan -var-file="private.tfvars"
+  terraform plan -var-file=<(gpg -d private.tfvars.gpg)
   ```
 
 ---
