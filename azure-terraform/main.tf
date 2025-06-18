@@ -8,34 +8,28 @@ resource "random_pet" "this" {
   separator = ""
 }
 
-resource "azurerm_storage_account" "backups" {
-  name                     = "sa${var.name}${random_pet.this.id}"
-  resource_group_name      = azurerm_resource_group.this.name
-  location                 = azurerm_resource_group.this.location
-  account_tier             = "Standard"
-  account_replication_type = "ZRS"
-  access_tier              = "Cool"
+module "storageaccounts_backups" {
+  source = "./storage_account"
 
-  blob_properties {
-    versioning_enabled = false
-  }
-
-  tags = merge(var.tags, { purpose = "backups" })
+  access_tier         = "Cool"
+  container_names     = var.backup_containers
+  name                = "sa${var.name}${random_pet.this.id}"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  tags                = merge(var.tags, { purpose = "backups" })
+  whitelisted_ips     = var.whitelisted_ips
 }
 
-resource "azurerm_storage_account_network_rules" "whitelist" {
-  storage_account_id = azurerm_storage_account.backups.id
+module "storageaccounts_hot" {
+  source = "./storage_account"
 
-  default_action = "Deny"
-  ip_rules       = var.whitelisted_ips
-}
-
-resource "azurerm_storage_container" "backups" {
-  for_each = var.backup_containers
-
-  name                  = each.value
-  storage_account_id    = azurerm_storage_account.backups.id
-  container_access_type = "private"
+  access_tier         = "Hot"
+  container_names     = var.hot_containers
+  name                = "hot${var.name}${random_pet.this.id}"
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  tags                = merge(var.tags, { purpose = "live storage" })
+  whitelisted_ips     = var.whitelisted_ips
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
