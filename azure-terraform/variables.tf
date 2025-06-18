@@ -31,6 +31,12 @@ variable "whitelisted_ips" {
   default     = []
 }
 
+variable "hot_containers" {
+  description = "names of containers dedicated to hot storage accounts"
+  type        = set(string)
+  default     = []
+}
+
 variable "backup_containers" {
   description = "names of containers dedicated to backup storage accounts"
   type        = set(string)
