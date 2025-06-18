@@ -5,6 +5,7 @@ resource "azurerm_storage_account" "this" {
   account_tier             = "Standard"
   account_replication_type = "ZRS"
   access_tier              = var.access_tier
+  min_tls_version          = "TLS1_2"
 
   blob_properties {
     versioning_enabled = false
@@ -18,6 +19,7 @@ resource "azurerm_storage_account_network_rules" "whitelist" {
 
   default_action = "Deny"
   ip_rules       = var.whitelisted_ips
+  bypass         = ["AzureServices"]
 }
 
 resource "azurerm_storage_container" "this" {
