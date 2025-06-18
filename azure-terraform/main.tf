@@ -127,7 +127,7 @@ resource "azurerm_network_security_group" "vm" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "*"
+    source_address_prefix      = var.whitelisted_ips[0]
     destination_address_prefix = "*"
   }
 
