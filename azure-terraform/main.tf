@@ -123,8 +123,8 @@ resource "azurerm_network_security_group" "vm" {
     for_each = var.whitelisted_ips
 
     content {
-      name                       = "SSH"
-      priority                   = 300
+      name                       = "SSH-${replace(security_rule.key, ".", "-")}"
+      priority                   = 300 + index(var.whitelisted_ips, security_rule.value)
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
