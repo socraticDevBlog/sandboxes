@@ -43,7 +43,7 @@ ansible-playbook comfy_stuff/playbook.yml
 - An anonymized template is provided as `inventory.template` in each playbook directory.
 
 ## Customization
-- Edit `group_vars/all.yml` to change system-wide variables (packages, timezone, hostname, etc).
+- Edit `group_vars/all.yml` to change system-wide variables (packages, hostname, etc).
 - Edit `motd.ascii` to customize the login banner.
 - Edit the playbooks or their variables to add/remove packages and tools as needed.
 

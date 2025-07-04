@@ -22,8 +22,9 @@
   ufw:
     state: enabled
 
-- name: Set timezone
-  command: timedatectl set-timezone {{ timezone }}
+- name: Set timezone to UTC
+  community.general.timezone:
+    name: UTC
 
 - name: Ensure the system is up to date
   apt:
