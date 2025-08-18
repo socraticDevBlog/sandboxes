@@ -18,6 +18,16 @@
     rule: allow
     name: OpenSSH
 
+- name: Set PermitRootLogin in sshd_config
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+    backrefs: yes
+  notify:
+    - Restart sshd
+
 - name: Enable UFW
   ufw:
     state: enabled
