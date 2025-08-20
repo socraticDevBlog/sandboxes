@@ -28,6 +28,21 @@
   notify:
     - Restart sshd
 
+- name: Ensure limits.conf exists
+  file:
+    path: /etc/security/limits.conf
+    state: file
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Set process limit for user anon
+  pam_limits:
+    domain: anon
+    limit_type: hard
+    limit_item: nproc
+    value: '3000'
+
 - name: Enable UFW
   ufw:
     state: enabled
