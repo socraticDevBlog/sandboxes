@@ -5,6 +5,11 @@
   vars_files:
     - group_vars/all.yml
   tasks:
+    - name: install essentials
+      apt:
+        update_cache: yes
+        name: "{{ essentials }}"
+        state: present
     - import_tasks: tasks/go.yml
       tags: go
     - name: Ensure shell for anon is bash (for Ansible compatibility)
