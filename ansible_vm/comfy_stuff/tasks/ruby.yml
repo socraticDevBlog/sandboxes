@@ -17,23 +17,12 @@
     state: present
   become: yes
 
-- name: Install Bundler
-  gem:
+- name: Install Bundler via gem
+  community.general.gem: 
     name: bundler
     state: present
+    bindir: /usr/local/bin
     norc: false
-  become: yes
-
-- name: Install Rails
-  gem:
-    name: rails
-    state: present
-  become: yes
-
-- name: Install RSpec for unit testing
-  gem:
-    name: rspec
-    state: present
   become: yes
 
 - name: Download and install mise with custom install path
@@ -41,3 +30,12 @@
     curl https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise sh
   args:
     creates: "/usr/local/bin/mise"
+
+- name: Set GEM_HOME and update PATH in .zshrc
+  ansible.builtin.blockinfile:
+    path: "$HOME/.zshrc"
+    marker: "# {mark} ANSIBLE GEM ENVIRONMENT"
+    block: |
+      export GEM_HOME="$HOME/.gem"
+      export PATH="$GEM_HOME/bin:$PATH"
+  become: false
