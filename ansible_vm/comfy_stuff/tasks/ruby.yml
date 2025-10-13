@@ -21,6 +21,7 @@
   gem:
     name: bundler
     state: present
+    norc: false
   become: yes
 
 - name: Install Rails
