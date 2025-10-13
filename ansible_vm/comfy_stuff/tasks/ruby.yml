@@ -1,0 +1,42 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install Ruby and development packages
+  apt:
+    name:
+      - ruby-full
+      - build-essential
+      - libssl-dev
+      - libreadline-dev
+      - zlib1g-dev
+      - nodejs # required for Rails asset pipeline
+      - yarn # optional, if using Yarn for assets
+    state: present
+  become: yes
+
+- name: Install Bundler
+  gem:
+    name: bundler
+    state: present
+  become: yes
+
+- name: Install Rails
+  gem:
+    name: rails
+    state: present
+  become: yes
+
+- name: Install RSpec for unit testing
+  gem:
+    name: rspec
+    state: present
+  become: yes
+
+- name: Download and install mise with custom install path
+  ansible.builtin.shell: |
+    curl https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise sh
+  args:
+    creates: "/usr/local/bin/mise"

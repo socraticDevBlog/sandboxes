@@ -1,5 +1,7 @@
 # Variables for comfy_stuff playbook
 
+vm_username: anon
+
 essentials:
 - busybox
 - tree

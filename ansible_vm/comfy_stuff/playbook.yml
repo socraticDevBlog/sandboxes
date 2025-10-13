@@ -12,6 +12,8 @@
         state: present
     - import_tasks: tasks/go.yml
       tags: go
+    - import_tasks: tasks/ruby.yml
+      tags: ruby
     - name: Ensure shell for anon is bash (for Ansible compatibility)
       user:
         name: anon
@@ -83,7 +85,7 @@
       become: false
       lineinfile:
         path: ~/.zshrc
-        regexp: '^ZSH_THEME='
+        regexp: "^ZSH_THEME="
         line: 'ZSH_THEME="{{ zsh_theme }}"'
 
     - name: Ensure ~/.vim/autoload directory exists
@@ -91,42 +93,42 @@
       file:
         path: ~/.vim/autoload
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Install vim-plug for Vim plugin management
       become: false
       get_url:
         url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         dest: ~/.vim/autoload/plug.vim
-        mode: '0644'
+        mode: "0644"
 
     - name: Ensure ~/.vimrc exists
       become: false
       file:
         path: ~/.vimrc
         state: touch
-        mode: '0644'
+        mode: "0644"
 
     - name: Remove old blockinfile markers from .vimrc
       become: false
       replace:
         path: ~/.vimrc
-        regexp: '^(;;|,,) (BEGIN|END) ANSIBLE MANAGED BLOCK for vim-plug$'
-        replace: ''
+        regexp: "^(;;|,,) (BEGIN|END) ANSIBLE MANAGED BLOCK for vim-plug$"
+        replace: ""
 
     - name: Remove all previous plug#begin/plug#end blocks from .vimrc
       become: false
       replace:
         path: ~/.vimrc
         regexp: 'call plug#begin\([^)]*\)[\s\S]*?call plug#end\(\)'
-        replace: ''
+        replace: ""
 
     - name: Ensure ~/.vim/pack/plugins/start directory exists
       become: false
       file:
         path: ~/.vim/pack/plugins/start
         state: directory
-        mode: '0755'
+        mode: "0755"
 
     - name: Install ALE using Vim native package system
       become: false
@@ -197,7 +199,7 @@
     - name: Clone pyenv repository
       become: false
       git:
-        repo: 'https://github.com/pyenv/pyenv.git'
+        repo: "https://github.com/pyenv/pyenv.git"
         dest: ~/.pyenv
         update: yes
 
@@ -216,7 +218,7 @@
       file:
         path: "~/{{ item }}"
         state: directory
-        mode: '0755'
+        mode: "0755"
       loop: "{{ user_dirs }}"
 
     - name: Remove all empty parentheses lines from .vimrc
@@ -224,4 +226,4 @@
       replace:
         path: ~/.vimrc
         regexp: '^\(\)\s*$'
-        replace: ''
+        replace: ""
