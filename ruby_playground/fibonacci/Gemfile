@@ -1,0 +1,11 @@
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
+
+gem 'rspec'
+
+gem 'tapioca', require: false, group: %i[development test]
+
+group :optional_group do
+  gem 'rubocop'
+end
