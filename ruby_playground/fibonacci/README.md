@@ -2,18 +2,18 @@
 
 ## install gems
 
-````bash
+```bash
 bundle install
 ```
 
 ## run tests
 
-````bash
+```bash
 bundle exec rspec fibo_test.rb
 ```
 
 ## format your source code and apply hints
 
-```
+```bash
 bundle exec rubocop -A
 ```
