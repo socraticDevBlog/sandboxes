@@ -43,7 +43,7 @@ ansible-playbook comfy_stuff/playbook.yml
 - An anonymized template is provided as `inventory.template` in each playbook directory.
 
 ## Customization
-- Edit `group_vars/all.yml` to change system-wide variables (packages, timezone, hostname, etc).
+- Edit `group_vars/all.yml` to change system-wide variables (packages, hostname, etc).
 - Edit `motd.ascii` to customize the login banner.
 - Edit the playbooks or their variables to add/remove packages and tools as needed.
 
@@ -52,3 +52,24 @@ ansible-playbook comfy_stuff/playbook.yml
 - `comfy_stuff/` — Developer/leisure environment playbook
 - `inventory` — Your private inventory file (not committed)
 - `inventory.template` — Example inventory file for sharing
+
+## ansible-vault
+
+create a password-protected vault (if none exist)
+```bash
+ansible-vault create vault.yml
+```
+
+save your vault password in KeepasXC new entry: "ansible vault"
+
+to view the secret
+
+```bash
+ansible-vault view vault.yml
+```
+
+### required for postgresql_provision
+
+```bash
+ansible-playbook postgresql_provision/playbook.yml --ask-vault-password
+```

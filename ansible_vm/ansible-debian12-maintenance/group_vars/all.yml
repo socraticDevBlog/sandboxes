@@ -8,9 +8,6 @@ packages:
   - vim
   - htop
 
-# Timezone to set on the system
-timezone: "UTC"
-
 # Desired hostname
 hostname: "debian12-vm"
 

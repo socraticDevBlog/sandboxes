@@ -18,12 +18,38 @@
     rule: allow
     name: OpenSSH
 
+- name: Set PermitRootLogin in sshd_config
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?PermitRootLogin"
+    line: "PermitRootLogin no"
+    state: present
+    backrefs: yes
+  notify:
+    - Restart sshd
+
+- name: Ensure limits.conf exists
+  file:
+    path: /etc/security/limits.conf
+    state: file
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Set process limit for user anon
+  pam_limits:
+    domain: anon
+    limit_type: hard
+    limit_item: nproc
+    value: '3000'
+
 - name: Enable UFW
   ufw:
     state: enabled
 
-- name: Set timezone
-  command: timedatectl set-timezone {{ timezone }}
+- name: Set timezone to UTC
+  community.general.timezone:
+    name: UTC
 
 - name: Ensure the system is up to date
   apt:

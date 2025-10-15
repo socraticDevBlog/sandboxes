@@ -1,6 +1,6 @@
-- name: Restart service
+- name: Restart sshd
   service:
-    name: "{{ item }}"
+    name: "ssh"
     state: restarted
   with_items: []
   when: ansible_service_mgr == 'systemd'

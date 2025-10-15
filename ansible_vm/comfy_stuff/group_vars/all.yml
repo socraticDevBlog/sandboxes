@@ -1,5 +1,9 @@
 # Variables for comfy_stuff playbook
 
+essentials:
+- busybox
+- tree
+
 leisure_packages:
   - weechat
   - zsh
