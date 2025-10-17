@@ -1,5 +1,11 @@
 # Variables for comfy_stuff playbook
 
+installed_gems:
+  - bundler
+  - rake
+  - standard
+  - amazing_print
+
 essentials:
 - busybox
 - tree
@@ -46,3 +52,4 @@ python_linters:
 shell_linters:
   - shellcheck
   - shfmt
+

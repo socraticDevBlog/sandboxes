@@ -1,0 +1,42 @@
+---
+- name: Update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install Ruby and development packages
+  apt:
+    name:
+      - ruby-full
+      - build-essential
+      - libssl-dev
+      - libreadline-dev
+      - zlib1g-dev
+      - nodejs # required for Rails asset pipeline
+      - yarn # optional, if using Yarn for assets
+    state: present
+  become: yes
+
+- name: Install gems
+  community.general.gem:
+    name: "{{ item }}"
+    state: present
+    bindir: /usr/local/bin
+    norc: false
+  become: yes
+  loop: "{{ installed_gems | default([]) }}"
+
+- name: Download and install mise with custom install path
+  ansible.builtin.shell: |
+    curl https://mise.run | MISE_INSTALL_PATH=/usr/local/bin/mise sh
+  args:
+    creates: "/usr/local/bin/mise"
+
+- name: Set GEM_HOME and update PATH in .zshrc
+  ansible.builtin.blockinfile:
+    path: "$HOME/.zshrc"
+    marker: "# {mark} ANSIBLE GEM ENVIRONMENT"
+    block: |
+      export GEM_HOME="$HOME/.gem"
+      export PATH="$GEM_HOME/bin:$PATH"
+  become: false
