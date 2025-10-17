@@ -1,10 +1,4 @@
 ---
-# - name: Add Podman apt repository (Debian 12)
-#   apt_repository:
-#     repo: 'deb [signed-by=/usr/share/keyrings/debian-archive-keyring.gpg] https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/Debian_12/ /'
-#     state: present
-#   become: true
-#   tags: podman
 
 - name: Install Podman and helpers
   apt:
