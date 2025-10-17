@@ -17,13 +17,14 @@
     state: present
   become: yes
 
-- name: Install Bundler via gem
-  community.general.gem: 
-    name: bundler
+- name: Install gems
+  community.general.gem:
+    name: "{{ item }}"
     state: present
     bindir: /usr/local/bin
     norc: false
   become: yes
+  loop: "{{ installed_gems | default([]) }}"
 
 - name: Download and install mise with custom install path
   ansible.builtin.shell: |
