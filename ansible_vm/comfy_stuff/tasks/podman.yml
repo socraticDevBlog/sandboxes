@@ -1,0 +1,71 @@
+---
+
+- name: Install Podman and helpers
+  apt:
+    name:
+      - podman
+      - podman-docker
+      - slirp4netns
+      - fuse-overlayfs
+    state: present
+    update_cache: yes
+  become: true
+  tags: podman
+
+- name: Ensure the group "podman" exists
+  ansible.builtin.group:
+    name: podman
+    state: present
+  tags: podman
+
+- name: Ensure user can run Podman without sudo (add {{ vm_username }} to podman group)
+  user:
+    name: "{{ vm_username }}"
+    groups: podman
+    append: yes
+  become: true
+  tags: podman
+
+- name: Ensure systemd user instance for podman is enabled
+  become: true
+  systemd:
+    name: podman.socket
+    scope: system
+    enabled: yes
+    state: started
+  tags: podman
+
+- name: Install DBus packages required by Podman user services
+  apt:
+    name:
+      - dbus-user-session
+      - dbus-x11
+    state: present
+    update_cache: yes
+  become: true
+  tags: podman
+
+- name: Check lingering status for anon
+  command: loginctl show-user anon
+  register: linger_status
+  changed_when: false
+
+- name: Enable systemd lingering for anon
+  become: true
+  command: loginctl enable-linger anon
+  when: "'Linger=yes' not in linger_status.stdout"
+  register: enable_linger
+  changed_when: true # ensure Ansible marks this as 'changed' when executed
+  tags: podman
+
+- name: Reboot if lingering was just enabled
+  become: true
+  reboot:
+    msg: "Rebooting because lingering was just enabled for user anon"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    post_reboot_delay: 10
+    test_command: whoami
+  when: enable_linger is defined and enable_linger.changed | default(false)
+  tags: podman
