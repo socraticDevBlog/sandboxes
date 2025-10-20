@@ -74,67 +74,6 @@ sandbox/
 
 ## 🚀 Quick Start
 
-### Initial Setup
-
-**Create the directory structure and configuration files:**
-
-```bash
-# Create directories
-mkdir -p monitoring/grafana/dashboards
-mkdir -p monitoring/grafana/datasources
-mkdir -p load-tests
-
-# Create Prometheus config
-cat > monitoring/prometheus.yml << 'EOF'
-global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
-
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['localhost:9090']
-  - job_name: 'postgres'
-    static_configs:
-      - targets: ['postgres-exporter:9187']
-  - job_name: 'redis'
-    static_configs:
-      - targets: ['redis-exporter:9121']
-  - job_name: 'api'
-    static_configs:
-      - targets: ['api:8080']
-EOF
-
-# Create Grafana datasource
-cat > monitoring/grafana/datasources/datasource.yml << 'EOF'
-apiVersion: 1
-datasources:
-  - name: Prometheus
-    type: prometheus
-    access: proxy
-    url: http://prometheus:9090
-    isDefault: true
-    editable: true
-EOF
-
-# Create Grafana dashboard provisioning
-cat > monitoring/grafana/dashboards/dashboard.yml << 'EOF'
-apiVersion: 1
-providers:
-  - name: 'default'
-    orgId: 1
-    folder: ''
-    type: file
-    disableDeletion: false
-    updateIntervalSeconds: 10
-    allowUiUpdates: true
-    options:
-      path: /etc/grafana/provisioning/dashboards
-EOF
-```
-
-Copy the dashboard JSON and k6 test scripts from the artifacts to their respective locations.
-
 ### Start All Services
 
 ```bash
