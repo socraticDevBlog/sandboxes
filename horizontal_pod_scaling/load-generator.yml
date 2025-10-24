@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: load-generator
+spec:
+  containers:
+    - name: load-generator
+      image: httpd:alpine
+      command: ["/bin/sh"]
+      args:
+        - -c
+        - |
+          # Install required tools
+          apk add --no-cache apache2-utils curl
+
+          echo "Starting AGGRESSIVE load test against nginx-deployment..."
+
+          # Function to run multiple ab instances in parallel
+          run_load() {
+            while true; do
+              # Run 10 parallel ab instances, each with high concurrency
+              for i in $(seq 1 10); do
+                ab -n 100000 -c 100 -t 3600 http://nginx-deployment.default.svc.cluster.local/ > /dev/null 2>&1 &
+              done
+              
+              # Also run curl loops for additional load
+              for i in $(seq 1 20); do
+                while true; do 
+                  curl -s http://nginx-deployment.default.svc.cluster.local/ > /dev/null
+                done &
+              done
+              
+              # Wait a bit before potentially restarting
+              sleep 300
+            done
+          }
+
+          # Start the aggressive load
+          run_load
+      resources:
+        requests:
+          cpu: 500m
+          memory: 256Mi
+        limits:
+          cpu: 2000m
+          memory: 512Mi
+  restartPolicy: Never
