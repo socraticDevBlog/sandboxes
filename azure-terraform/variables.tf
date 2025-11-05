@@ -27,7 +27,7 @@ variable "tags" {
 
 variable "whitelisted_ips" {
   description = "resources can only be accessed by machines located at these IP addresses"
-  type        = set(string)
+  type        = list(string)
   default     = []
 }
 
