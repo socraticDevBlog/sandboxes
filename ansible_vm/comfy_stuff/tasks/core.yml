@@ -1,0 +1,31 @@
+---
+- name: Clean apt lists
+  become: yes
+  file:
+    path: /var/lib/apt/lists
+    state: absent
+  ignore_errors: yes
+
+- name: Recreate apt lists dir
+  become: yes
+  file:
+    path: /var/lib/apt/lists/partial
+    state: directory
+    mode: "0755"
+
+- name: Update apt cache (fresh)
+  become: yes
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install prerequisites
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+    state: present
+    update_cache: yes
+  become: yes

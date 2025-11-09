@@ -1,0 +1,54 @@
+---
+- name: Ensure zsh is installed
+  apt:
+    name: zsh
+    state: present
+  become: yes
+
+- name: Set zsh as default shell for user
+  user:
+    name: "{{ ansible_ssh_user | default(ansible_user) | default(ansible_user_id) }}"
+    shell: /usr/bin/zsh
+  become: yes
+
+- name: Ensure .zshrc exists
+  become: false
+  file:
+    path: ~/.zshrc
+    state: touch
+    mode: "0644"
+
+- name: Check if oh-my-zsh is installed
+  stat:
+    path: ~/.oh-my-zsh
+  register: omz_check
+  become: false
+
+- name: Install oh-my-zsh
+  when: not omz_check.stat.exists
+  become: false
+  shell: |
+    curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o /tmp/install.sh
+    sh /tmp/install.sh --unattended
+    rm /tmp/install.sh
+
+- name: Install powerlevel10k theme
+  become: false
+  git:
+    repo: https://github.com/romkatv/powerlevel10k.git
+    dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
+    depth: 1
+    update: yes
+
+- name: Ensure powerlevel10k is set in .zshrc
+  become: false
+  lineinfile:
+    path: ~/.zshrc
+    regexp: "^ZSH_THEME="
+    line: 'ZSH_THEME="{{ zsh_theme }}"'
+
+- name: Update .zshrc
+  ansible.builtin.lineinfile:
+    path: "/home/{{ ansible_ssh_user }}/.zshrc"
+    insertafter: EOF
+    line: "source /home/{{ ansible_ssh_user }}/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme"

@@ -1,0 +1,32 @@
+---
+- name: Remove legacy NodeSource and Yarn repository files
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/apt/sources.list.d/nodesource.list
+    - /etc/apt/sources.list.d/yarn.list
+    - /etc/apt/keyrings/nodesource.gpg
+    - /etc/apt/keyrings/yarn.gpg
+    - /etc/apt/trusted.gpg.d/yarn-archive-keyring.gpg
+    - /etc/apt/trusted.gpg.d/nodesource.gpg
+
+- name: Install Node.js from Debian repository
+  apt:
+    name: nodejs
+    state: present
+    update_cache: yes
+  become: yes
+
+- name: Install npm
+  apt:
+    name: npm
+    state: present
+  become: yes
+
+- name: Install Yarn via npm
+  npm:
+    name: yarn
+    global: yes
+  become: yes

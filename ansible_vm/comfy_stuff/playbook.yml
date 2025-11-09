@@ -1,5 +1,5 @@
 ---
-- name: Set up leisure tools on Debian 12 VM
+- name: Set up leisure tools on Debian 13 VM
   hosts: all
   become: yes
   vars_files:
@@ -10,6 +10,19 @@
         update_cache: yes
         name: "{{ essentials }}"
         state: present
+    - name: Ensure zsh is installed
+      apt:
+        name: zsh
+        state: present
+    - name: Ensure .zshrc exists
+      become: false
+      file:
+        path: ~/.zshrc
+        state: touch
+        mode: '0644'
+      tags: go
+    - import_tasks: tasks/core.yml
+    - import_tasks: tasks/node.yml
     - import_tasks: tasks/go.yml
       tags: go
     - import_tasks: tasks/ruby.yml
@@ -29,65 +42,12 @@
           curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
         fi
         if [ -f "$TFSWITCH_BIN" ]; then
-          sudo install -m 0755 "$TFSWITCH_BIN" /usr/local/bin/tfswitch
+          install -m 0755 "$TFSWITCH_BIN" /usr/local/bin/tfswitch
         fi
       args:
         creates: /usr/local/bin/tfswitch
       tags: tfswitch
-    - name: Ensure $HOME/bin is in PATH for zsh
-      become: false
-      lineinfile:
-        path: ~/.zshrc
-        regexp: '^export PATH="\$PATH:\$HOME/bin"'
-        line: 'export PATH="$PATH:$HOME/bin"'
-        insertafter: EOF
-      tags: terraform
-    - name: Install tfswitch (Terraform version switcher)
-      become: false
-      shell: |
-        set -e
-        export TFSWITCH_BIN="$HOME/.tfswitch/bin/tfswitch"
-        if ! command -v tfswitch >/dev/null 2>&1; then
-          curl -L https://raw.githubusercontent.com/warrensbox/terraform-switcher/release/install.sh | bash
-        fi
-        if [ -f "$TFSWITCH_BIN" ]; then
-          sudo install -m 0755 "$TFSWITCH_BIN" /usr/local/bin/tfswitch
-        fi
-      args:
-        creates: /usr/local/bin/tfswitch
-      tags: tfswitch
-
-    - name: Ensure zsh is installed
-      apt:
-        name: zsh
-        state: present
-
-    - name: Set zsh as default shell for user
-      user:
-        name: "{{ ansible_ssh_user | default(ansible_user) | default(ansible_user_id) }}"
-        shell: /usr/bin/zsh
-
-    - name: Install oh-my-zsh
-      become: false
-      shell: |
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || true
-      args:
-        creates: ~/.oh-my-zsh
-
-    - name: Install powerlevel10k theme
-      become: false
-      git:
-        repo: https://github.com/romkatv/powerlevel10k.git
-        dest: ~/.oh-my-zsh/custom/themes/powerlevel10k
-        depth: 1
-
-    - name: Ensure powerlevel10k is set in .zshrc
-      become: false
-      lineinfile:
-        path: ~/.zshrc
-        regexp: '^ZSH_THEME='
-        line: 'ZSH_THEME="{{ zsh_theme }}"'
-
+    - import_tasks: tasks/zsh.yml
     - name: Ensure ~/.vim/autoload directory exists
       become: false
       file:

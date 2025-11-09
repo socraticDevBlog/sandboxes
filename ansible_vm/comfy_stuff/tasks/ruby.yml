@@ -1,9 +1,4 @@
 ---
-- name: Update apt cache
-  apt:
-    update_cache: yes
-  become: yes
-
 - name: Install Ruby and development packages
   apt:
     name:
@@ -12,8 +7,6 @@
       - libssl-dev
       - libreadline-dev
       - zlib1g-dev
-      - nodejs # required for Rails asset pipeline
-      - yarn # optional, if using Yarn for assets
     state: present
   become: yes
 
