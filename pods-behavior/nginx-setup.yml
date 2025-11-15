@@ -1,0 +1,192 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-html
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Pod Counter</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          max-width: 800px;
+          margin: 50px auto;
+          padding: 20px;
+        }
+        #log {
+          border: 1px solid #ccc;
+          padding: 10px;
+          height: 400px;
+          overflow-y: auto;
+          background-color: #f5f5f5;
+        }
+        .log-entry {
+          margin: 5px 0;
+          padding: 5px;
+          background-color: white;
+          border-left: 3px solid #4CAF50;
+        }
+        .hostname {
+          color: #2196F3;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>Nginx Pod: <span id="hostname" class="hostname">Loading...</span></h1>
+      <div id="log"></div>
+      
+      <script>
+        let counter = 0;
+        const logDiv = document.getElementById('log');
+        const hostnameSpan = document.getElementById('hostname');
+        let podName = 'Unknown';
+        
+        // Fetch the actual pod name from the API
+        async function getPodName() {
+          try {
+            const response = await fetch('/api/hostname');
+            if (response.ok) {
+              podName = await response.text();
+              podName = podName.trim();
+              hostnameSpan.textContent = podName;
+            } else {
+              hostnameSpan.textContent = 'Error: ' + response.status;
+            }
+          } catch (error) {
+            hostnameSpan.textContent = 'Error: ' + error.message;
+          }
+        }
+        
+        // Get pod name on load
+        getPodName();
+        
+        function addLogEntry() {
+          counter++;
+          const entry = document.createElement('div');
+          entry.className = 'log-entry';
+          const now = new Date().toLocaleTimeString();
+          entry.textContent = `[${now}] Counter: ${counter} (from ${podName})`;
+          logDiv.appendChild(entry);
+          logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        // Add initial entry
+        addLogEntry();
+        
+        // Add new entry every 5 seconds
+        setInterval(addLogEntry, 5000);
+      </script>
+    </body>
+    </html>
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name _;
+        
+        # Check if shutdown file exists
+        location / {
+            root /usr/share/nginx/html;
+            index index.html;
+            
+            # Add custom header with pod name
+            add_header X-Pod-Name $hostname;
+            
+            # Return 503 if shutting down
+            if (-f /tmp/shutting-down) {
+                return 503 "Pod is shutting down\n";
+            }
+        }
+        
+        location /api/hostname {
+            default_type text/plain;
+            
+            # Return 503 if shutting down
+            if (-f /tmp/shutting-down) {
+                return 503 "Pod is shutting down\n";
+            }
+            
+            return 200 $hostname;
+        }
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          # lifecycle:
+          #   preStop:
+          #     exec:
+          #       command:
+          #         ["/bin/sh", "-c", "touch /tmp/shutting-down && sleep 30"]
+          volumeMounts:
+            - name: html
+              mountPath: /usr/share/nginx/html/index.html
+              subPath: index.html
+            - name: nginx-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+      volumes:
+        - name: html
+          configMap:
+            name: nginx-html
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-loadbalancer
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
