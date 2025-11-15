@@ -10,7 +10,7 @@
 
 0. have Docker Desktop running and Kubernetes cluster capability enabled
 1. `kubectl apply -f nginx-setup.yml`
-2. expect to see two nginx pods when executing command `kubectl get pods`
+2. expect to see one nginx pods when executing command `kubectl get pods`
 
 ## content
 
