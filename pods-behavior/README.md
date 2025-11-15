@@ -17,7 +17,7 @@
 |||
 |-|-|
 |ConfigMap:| Contains the HTML with JavaScript that counts every 5 seconds|
-|Deployment:| Creates 2 nginx pod replicas|
+|Deployment:| Creates 1 nginx pod replicas|
 |Service:| LoadBalancer that distributes traffic between the pods|
 
 # Kubernetes Pod Testing Scenarios
