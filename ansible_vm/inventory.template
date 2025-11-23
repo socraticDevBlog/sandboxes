@@ -1,3 +1,4 @@
 
 [debian12_vm]
-<my_host address> ansible_ssh_user=<vps user name> pg_user=<postgresql db username> pg_database=<postgresql db name>
+<my_host address> ansible_ssh_user=<vps user name> pg_user=<postgresql db
+username> pg_database=<postgresql db name> cpu_architecture=<amd64 | arm64>

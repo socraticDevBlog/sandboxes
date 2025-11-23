@@ -34,7 +34,7 @@
       become: true
       tags: always
     - name: Install tfswitch (Terraform version switcher)
-      become: false
+      become: true
       shell: |
         set -e
         export TFSWITCH_BIN="$HOME/.tfswitch/bin/tfswitch"
@@ -54,6 +54,14 @@
         path: ~/.vim/autoload
         state: directory
         mode: '0755'
+
+    - name: Set tfswitch in PATH in .zshrc
+      ansible.builtin.blockinfile:
+        path: "$HOME/.zshrc"
+        marker: "# {mark} tfswitch"
+        block: |
+          export PATH="$PATH:/home/{{ ansible_ssh_user }}/bin"
+      become: false
 
     - name: Install vim-plug for Vim plugin management
       become: false
