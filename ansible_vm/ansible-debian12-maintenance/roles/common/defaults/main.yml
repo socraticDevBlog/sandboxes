@@ -1,0 +1,4 @@
+---
+# Defaults for nginx and LetsEncrypt integration
+# Set `nginx_letsencrypt: true` to attempt obtaining a real cert via certbot
+nginx_letsencrypt: true

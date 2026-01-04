@@ -56,3 +56,77 @@
     upgrade: dist
     update_cache: yes
     cache_valid_time: 3600
+
+- name: Install nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Allow HTTP and HTTPS through UFW
+  ufw:
+    rule: allow
+    name: "Nginx Full"
+
+- name: Ensure directory for nginx ssl certs exists
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create self-signed certificate (idempotent)
+  command: >-
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048
+    -subj "/CN=localhost"
+    -keyout /etc/nginx/ssl/privkey.pem
+    -out /etc/nginx/ssl/fullchain.pem
+  args:
+    creates: /etc/nginx/ssl/fullchain.pem
+  notify:
+    - Restart nginx
+  when: not nginx_letsencrypt | default(false)
+
+- name: Install certbot and nginx plugin
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+  when: nginx_letsencrypt | default(false)
+
+- name: Obtain Let's Encrypt certificate via certbot
+  command: >-
+    certbot --nginx -n --agree-tos --redirect --email {{ letsencrypt_email }} -d {{ nginx_server_name }}
+  args:
+    creates: /etc/letsencrypt/live/{{ nginx_server_name }}/fullchain.pem
+  register: certbot_result
+  notify:
+    - Restart nginx
+  when: nginx_letsencrypt | default(false)
+
+- name: Fail if certbot failed
+  fail:
+    msg: "certbot failed: {{ certbot_result.stderr }} {{ certbot_result.stdout }}"
+  when: nginx_letsencrypt | default(false) and certbot_result is defined and certbot_result.rc != 0
+
+- name: Deploy reverse proxy config
+  template:
+    src: reverse_proxy.conf.j2
+    dest: /etc/nginx/conf.d/reverse_proxy.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart nginx
+
+- name: Test nginx configuration
+  command: nginx -t
+  register: nginx_test
+  changed_when: false
+
+- name: Fail if nginx config test failed
+  fail:
+    msg: "nginx configuration test failed: {{ nginx_test.stderr }}"
+  when: nginx_test.rc != 0
+

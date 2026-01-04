@@ -4,3 +4,9 @@
     state: restarted
   with_items: []
   when: ansible_service_mgr == 'systemd'
+
+- name: Restart nginx
+  service:
+    name: "nginx"
+    state: restarted
+  when: ansible_service_mgr == 'systemd'
