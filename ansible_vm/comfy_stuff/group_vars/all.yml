@@ -21,6 +21,7 @@ vim_plugins:
   - tpope/vim-sensible
   - preservim/nerdtree
   - dense-analysis/ale
+  - fatih/vim-go
 user_dirs:
   - git
   - code
