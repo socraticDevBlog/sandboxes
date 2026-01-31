@@ -1,0 +1,9 @@
+venv/
+liboqs/
+
+.env
+
+__pycache__/
+pyvenv.cfg
+
+backups/

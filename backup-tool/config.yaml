@@ -1,0 +1,56 @@
+---
+# Backup Tool Configuration
+# This file can be used with: python backup_tool.py -c config.yaml
+
+backup:
+  # Root path to search for files/folders
+  root_path: /home/<username>
+
+  # Paths to include (relative to root_path or absolute)
+  include_paths:
+    # - Documents
+    # - Projects/important
+    # - .ssh
+    # - .gnupg
+    # - Pictures/family
+
+  # Patterns to exclude (glob patterns)
+  exclude_patterns:
+    - "*.tmp"
+    - "*.cache"
+    - "**/node_modules/**"
+    - "**/__pycache__/**"
+    - "*.log"
+
+  # Where to store backup files locally
+  output_dir: ./backups
+
+  # Compression level (0-9, where 9 is maximum compression)
+  compression_level: 9
+
+encryption:
+  # Post-quantum algorithm: Kyber512, Kyber768, Kyber1024
+  # Use Kyber1024 for maximum security
+  algorithm: Kyber1024
+
+  use_env_password: false
+
+## Cloud integration not available yet (2026-01-31)
+#
+storage:
+  # If true, only store backups locally (disable cloud uploads)
+  local_only: true
+
+  azure:
+    enabled: false
+    # Get from Azure Portal or set via AZURE_CONNECTION_STRING env var
+    connection_string: null
+    # Container must exist or be created beforehand
+    container_name: backups
+
+  aws:
+    enabled: false
+    # AWS credentials should be in ~/.aws/credentials or env vars
+    bucket_name: null
+    region: us-east-1
+    # Can also set: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
