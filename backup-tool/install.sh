@@ -4,6 +4,9 @@
 # Exit on error, but we'll handle specific errors ourselves
 set -e
 
+# Get the directory where this script is located (works regardless of where you run it from)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Color codes for better output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -444,7 +447,7 @@ success "Quantum-resistant encryption is ready to use"
 echo ""
 info "Setting up configuration files..."
 
-if [ -f "config.yaml" ]; then
+if [ -f "$SCRIPT_DIR/config.yaml" ]; then
     success "config.yaml already exists"
 else
     warning "config.yaml not found - you'll need to create one"
@@ -458,8 +461,8 @@ echo ""
 info "Making scripts executable..."
 SCRIPTS_MADE_EXECUTABLE=0
 for script in backup_tool.py decrypt_backup.py backup_profiles.py install_liboqs.sh; do
-    if [ -f "$script" ]; then
-        chmod +x "$script" 2>/dev/null && SCRIPTS_MADE_EXECUTABLE=$((SCRIPTS_MADE_EXECUTABLE + 1))
+    if [ -f "$SCRIPT_DIR/$script" ]; then
+        chmod +x "$SCRIPT_DIR/$script" 2>/dev/null && SCRIPTS_MADE_EXECUTABLE=$((SCRIPTS_MADE_EXECUTABLE + 1))
     fi
 done
 success "Made $SCRIPTS_MADE_EXECUTABLE scripts executable"
@@ -467,7 +470,7 @@ success "Made $SCRIPTS_MADE_EXECUTABLE scripts executable"
 # Test installation
 echo ""
 info "Testing installation..."
-if $PYTHON_CMD backup_tool.py --help > /dev/null 2>&1; then
+if $PYTHON_CMD "$SCRIPT_DIR/backup_tool.py" --help > /dev/null 2>&1; then
     success "backup_tool.py is working correctly"
 else
     error "backup_tool.py failed to run"
