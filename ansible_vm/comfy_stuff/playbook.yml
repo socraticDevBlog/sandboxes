@@ -25,6 +25,8 @@
     - import_tasks: tasks/node.yml
     - import_tasks: tasks/go.yml
       tags: go
+    - import_tasks: tasks/podman.yml
+      tags: podman
     - import_tasks: tasks/ruby.yml
       tags: ruby
     - name: Ensure shell for anon is bash (for Ansible compatibility)
