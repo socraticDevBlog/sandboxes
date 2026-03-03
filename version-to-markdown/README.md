@@ -11,7 +11,7 @@ our app just need to have an API endpoint that returns such a json response:
 content={
     "schemaVersion": 1,
     "label": "version",
-    "message": version,
+    "message": 1.2.3,
     "color": "blue"
     },
 headers={
