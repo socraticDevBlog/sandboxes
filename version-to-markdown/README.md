@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/endpoint?url=https://20260302version-random-api-endpoint.azurewebsites.net/version)
+![Version](https://img.shields.io/endpoint?url=https://random-version-api-endpoint.azurewebsites.net/version)
 
 # version-to-markdown
 
