@@ -28,4 +28,6 @@ we need a third-party service like <shields.io>
 
 ```bash
 chmod +x azure.sh
+
+./azure.sh
 ```
