@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 AZ_APP_SERVICE_NAME="20260302version-random-api-endpoint"
-AZ_APP_SERVICE_PLAN_SKU="B1"
+AZ_APP_SERVICE_PLAN_SKU="F1" # free tier
 AZ_RESOURCE_GROUP_NAME="<my-resource-group>"
 AZ_SUBSCRIPTION_ID="<my azure subscription id>"
 RUNTIME="PYTHON:3.12"
