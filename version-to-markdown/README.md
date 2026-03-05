@@ -1,7 +1,6 @@
 ![](https://img.shields.io/endpoint?url=https://random-version-api-endpoint.azurewebsites.net/dev/version)![](https://img.shields.io/endpoint?url=https://random-version-api-endpoint.azurewebsites.net/staging/version)![](https://img.shields.io/endpoint?url=https://random-version-api-endpoint.azurewebsites.net/prod/version)
 
 
-
 # version-to-markdown
 
 we want to display the version of our app running in production in our GitHub
